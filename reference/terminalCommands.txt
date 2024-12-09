@@ -1,16 +1,23 @@
 // first time after cloning the main repo
+
 git switch -c "BRANCH_NAME"
 
 
 // to access your branch
+
 git switch "BRANCH_NAME"
 
+// to know current branch and modified
+git status
 
 // after adding or modifying code
+
 git add *
 git fetch origin
 get merge origin/master
 get push
+ 
+// pull from terminal >> git pull 
+// or
+// webpage pull requestes Opened option to merge to tha main
 
-// pull from terminal or webpage
-git pull
