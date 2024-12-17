@@ -4,14 +4,17 @@ const Recipes = require("../../models/Categories");
 
 exports.viewCategories = async (req, res) => {
   try {
-    const allCategories = await Categories.find().populate(
-      "recipes",
-      "name -_id"
-    );
-    res.status(200).json(allCategories);
+    const authorizedUser = {
+      id: req.user._id,
+      name: req.user.name,
+      myFavoriteecipes: req.user.myFavoriteecipes,
+    };
+    const allCategories = await Categories.find();
+    const objRecipes = Object.assign({ allCategories }, authorizedUser);
+    res.status(200).json(objRecipes);
   } catch (e) {
     res.status(500).json({ msg: "error" });
-    console.log(e.Message);
+    console.log(e.message);
   }
 };
 
@@ -36,6 +39,6 @@ exports.createNewCategories = async (req, res, next) => {
     else res.status(201).json(newCategory);
   } catch (e) {
     res.status(500).json({ msg: "category error" });
-    console.log("category error ", e.Message);
+    console.log("category error ", e.message);
   }
 };

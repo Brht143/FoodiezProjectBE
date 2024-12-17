@@ -31,7 +31,7 @@ router.put("/:recipeId", likeRecipe);
 
 router.delete(
   "/:recipeName",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   deleteRecipe
 );
 
