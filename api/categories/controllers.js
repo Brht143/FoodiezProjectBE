@@ -17,6 +17,8 @@ exports.viewCategories = async (req, res) => {
 
 exports.createNewCategories = async (req, res, next) => {
   try {
+    // console.log(req.body);
+    // console.log(req.file);
     let isSubRequest = req.body.isSubRequest;
     let category = req.body.category.toLowerCase().trim() || "";
     if (req.file && !isSubRequest) {
@@ -34,6 +36,6 @@ exports.createNewCategories = async (req, res, next) => {
     else res.status(201).json(newCategory);
   } catch (e) {
     res.status(500).json({ msg: "category error" });
-    console.log("cateory error ", e.Message);
+    console.log("category error ", e.Message);
   }
 };

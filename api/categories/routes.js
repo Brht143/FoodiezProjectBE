@@ -6,10 +6,6 @@ const { createNewCategories, viewCategories } = require("./controllers");
 
 router.get("/", viewCategories);
 
-router.post(
-  "/",
-  // upload.single("image"),
-  createNewCategories
-);
+router.post("/", upload.single("image"), createNewCategories);
 
 module.exports = router;

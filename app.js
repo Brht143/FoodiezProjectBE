@@ -19,7 +19,7 @@ app.use(cors());
 
 // Middleware - JSON Body Parser
 app.use(express.json());
-app.use("/media", express.static(path.join(__dirname, "media")));
+app.use("/media", express.static(path.join(__dirname, "./api/media")));
 
 passport.use(localStrategy);
 passport.use(jwtStrategy);
