@@ -1,0 +1,18 @@
+exports.ingredients = [
+  { name: "Eggs" },
+  { name: "Tomato" },
+  { name: "Feta Cheese" },
+  { name: "Olive Oil" },
+  { name: "Salt" },
+  { name: "Pepper" },
+  { name: "Whole Grain Bread" },
+  { name: "Chicken Breast" },
+  { name: "Cheddar Cheese" },
+  { name: "Spinach" },
+  { name: "Salmon Fillet" },
+  { name: "Whole Grain Bun" },
+  { name: "Lettuce" },
+  { name: "Tomato" },
+  { name: "Onion" },
+  { name: "Avocado" },
+];
