@@ -2,7 +2,7 @@ const { model, Schema } = require("mongoose");
 
 const RecipesSchema = new Schema({
   name: { type: String, required: true, unique: true },
-  image: { type: String },
+  // image: { type: String },
   category: { type: Schema.Types.ObjectId, ref: "Categories" },
   ingredientsAmount: [
     {
@@ -15,6 +15,7 @@ const RecipesSchema = new Schema({
       type: { type: String },
     },
   ],
+  steps: [{ step: { type: String } }],
   creator: { type: Schema.Types.ObjectId, ref: "User" },
   reviews: [
     {
