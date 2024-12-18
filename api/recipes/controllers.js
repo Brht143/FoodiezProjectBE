@@ -36,21 +36,16 @@ exports.viewRecipes = async (req, res) => {
 
 exports.createRecipe = async (req, res, next) => {
   // parse req params and body
-  if (req.file) {
-    req.body.image = `http://${req.get(
-      "host"
-    )}/media/${req.file.filename.trim()}`;
-  }
-  let creator = await User.findOne({ name: req.body.creator });
-  let category = req.params.newCategory;
-  let recipe = req.body.recipe.toLowerCase().trim();
-  let image = req.body.image;
-  let ingredients = req.body.ingredientsData;
-  let reviews = req.body.review; //[ {"rate": 0,"report":"None" ,"user": "Hamad"}]
-  let resMsg = "";
-  let isValid = true;
+
   try {
-    // check if recipe exists else create it
+    let { recipe, image, ingredientsData, steps, creator, isSubRequest } =
+      req.body;
+    // let creator = await User.findOne({ name: req.body.creator });
+    let category = req.params.newCategory;
+
+    console.log("image", req.file);
+    // let reviews = req.body.review; //[ {"rate": 0,"report":"None" ,"user": "Hamad"}]
+    let resMsg = "";
 
     let createdRecipe = await Recipes.findOne({ name: recipe });
     if (!createdRecipe)
@@ -61,34 +56,37 @@ exports.createRecipe = async (req, res, next) => {
       });
     else {
       resMsg = "Recipe name already existing";
-      isValid = flase;
+      isValid = false;
     }
 
     // check if recipe belongs to category else add it
 
     let categorized = await Categories.findOne({ recipes: createdRecipe });
     if (!categorized)
-      await Categories.findByIdAndUpdate(category, {
-        $push: { recipes: createdRecipe },
-      });
+      await Categories.findOneAndUpdate(
+        { name: category },
+        {
+          $push: { recipes: createdRecipe },
+        }
+      );
     else {
       resMsg = "Recipe is already categorized";
-      isValid = flase;
+      isValid = false;
     }
 
     let addedToMyRecipes = await User.findOne({ Myrecipes: createdRecipe });
     if (!addedToMyRecipes)
-      await User.findOneAndUpdate(creator, {
+      await User.findByIdAndUpdate(creator, {
         $push: { myRecipes: createdRecipe },
       });
 
-    ingredients.forEach(async (ingredient) => {
+    ingredientsData.forEach(async (ingredient) => {
       let selectedIngredient = await Ingredients.findOne({
-        name: ingredient.name.toLowerCase().trim(),
+        name: ingredient.toLowerCase().trim(),
       });
       await Ingredients.findOneAndUpdate(
         {
-          name: ingredient.name.toLowerCase().trim(),
+          name: ingredient.toLowerCase().trim(),
         },
         { $push: { recipes: createdRecipe } }
       );
@@ -98,7 +96,7 @@ exports.createRecipe = async (req, res, next) => {
           $push: {
             ingredientsAmount: {
               ingredient: selectedIngredient,
-              name: ingredient.name.toLowerCase().trim(),
+              name: ingredient.toLowerCase().trim(),
               amount: ingredient.amount,
               type: ingredient.type,
             },
@@ -107,26 +105,35 @@ exports.createRecipe = async (req, res, next) => {
       );
     });
 
-    reviews.forEach(async (review) => {
-      let reviewer = await Users.findOne({ name: review.user });
+    steps.forEach(async (step) => {
       await Recipes.findOneAndUpdate(
         { name: recipe },
         {
-          $push: {
-            reviews: {
-              rate: review.rate,
-              report: review.report,
-              user: reviewer,
-            },
-          },
+          $push: { steps: { step } },
         }
       );
     });
 
-    if (isValid) res.status(201).json(`${recipe} is created successfully`);
+    // reviews.forEach(async (review) => {
+    //   let reviewer = await Users.findOne({ name: review.user });
+    //   await Recipes.findOneAndUpdate(
+    //     { name: recipe },
+    //     {
+    //       $push: {
+    //         reviews: {
+    //           rate: review.rate,
+    //           report: review.report,
+    //           user: reviewer,
+    //         },
+    //       },
+    //     }
+    //   );
+    // });
+
+    res.status(201).json(`${recipe} is created successfully`);
   } catch (e) {
-    res.status(400).json({ msg: "recipe error", resMsg });
-    // console.log(e.Message);
+    console.log("recipe error", e.message);
+    res.status(400).json("recipe error");
   }
 };
 

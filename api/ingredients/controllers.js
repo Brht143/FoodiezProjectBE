@@ -6,7 +6,7 @@ exports.createNewIngredients = async (req, res, next) => {
     let isSubRequest = req.body.isSubRequest;
     let ingredients = req.body.ingredientsData || "";
     ingredients.forEach(async (ingredient, index) => {
-      let name = ingredient.name.toLowerCase().trim() || "";
+      let name = ingredient.toLowerCase().trim() || "";
 
       let newIngredient = await Ingredients.findOne({ name: name });
       if (!newIngredient)

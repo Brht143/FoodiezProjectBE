@@ -24,7 +24,7 @@ exports.createNewCategories = async (req, res, next) => {
     // console.log(req.file);
     let isSubRequest = req.body.isSubRequest;
     let category = req.body.category.toLowerCase().trim() || "";
-    if (req.file && !isSubRequest) {
+    if (req.file) {
       req.body.image = `http://${req.get(
         "host"
       )}/media/${req.file.filename.trim()}`;
@@ -35,6 +35,7 @@ exports.createNewCategories = async (req, res, next) => {
       newCategory = await Categories.create({ name: category, image: image });
     // in case req is to create recipe
     req.params.newCategory = newCategory;
+
     if (isSubRequest) next();
     else res.status(201).json(newCategory);
   } catch (e) {

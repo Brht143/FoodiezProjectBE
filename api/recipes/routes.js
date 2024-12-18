@@ -21,8 +21,13 @@ const { createNewIngredients } = require("../ingredients/controllers");
 
 router.get("/", passport.authenticate("jwt", { session: false }), viewRecipes);
 
-router.post("/", createNewIngredients, createNewCategories, createRecipe);
-// upload.single("image"),
+router.post(
+  "/",
+  createNewIngredients,
+  upload.single("image"),
+  createNewCategories,
+  createRecipe
+);
 
 router.put("/:recipeId", editRecipe);
 router.put("/:recipeId", rateRecipe);
