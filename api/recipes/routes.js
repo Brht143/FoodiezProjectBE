@@ -30,9 +30,9 @@ router.post(
 );
 
 router.put("/:recipeId", editRecipe);
-router.put("/:recipeId", rateRecipe);
-router.put("/:recipeId", reportRecipe);
-router.put("/:recipeId", likeRecipe);
+router.put("/like/:recipeId", likeRecipe);
+router.put("/report/:recipeId", reportRecipe);
+router.put("/save/:recipeId", rateRecipe);
 
 router.delete(
   "/:recipeName",

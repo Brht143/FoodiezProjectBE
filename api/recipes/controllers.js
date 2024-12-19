@@ -12,8 +12,8 @@ exports.viewRecipes = async (req, res) => {
     const allRecipes = await Recipes.find()
       .populate("creator", "name _id")
       .populate("category", "name -_id")
-      .populate("ingredientsAmount.ingredient", "name -_id")
-      .select("-_id");
+      .populate("ingredientsAmount.ingredient", "name -_id");
+    // .select("-_id");
 
     const authorizedUser = {
       id: req.user._id,
@@ -161,6 +161,24 @@ exports.reportRecipe = async (req, res) => {
 };
 
 exports.likeRecipe = async (req, res) => {
+  let recipeId = req.params.recipeId;
+  console.log(req.body);
+  let review = { rate: req.body.review.rate, user: req.body.review.user };
+  console.log(review);
+  let foundRecipe = await Recipes.findById(recipeId).findOne({
+    "reviews.user": review.user,
+  });
+
+  // console.log(foundRecipe);
+
+  !foundRecipe
+    ? await Recipes.findByIdAndUpdate(recipeId, {
+        $push: { reviews: review },
+      })
+    : await Recipes.findByIdAndUpdate(recipeId, {
+        $push: { reviews: review },
+      });
+
   res.json(req.params.recipeId);
 };
 
